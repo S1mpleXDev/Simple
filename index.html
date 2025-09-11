@@ -14,6 +14,7 @@
             height: 100%;
             background-color: black;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
@@ -28,11 +29,26 @@
             font-family: Arial, sans-serif;
             font-size: 2em;
             font-weight: bold;
-            animation: pulse 1.5s ease-in-out infinite alternate;
+            margin-bottom: 20px;
         }
-        @keyframes pulse {
-            from { opacity: 0.5; }
-            to { opacity: 1; }
+        .dots {
+            display: inline-block;
+            width: 30px; /* Space for dots */
+            text-align: left;
+        }
+        .progress-container {
+            width: 300px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: white;
+            transition: width 0.2s ease-in-out;
         }
         .error-message {
             color: red;
@@ -65,10 +81,11 @@
 <body>
     <!-- Loading Screen -->
     <div id="loading-screen">
-        <div>
-            <div class="loading-text">Loading Assets...</div>
-            <div id="error-message" class="error-message" style="display: none;">Connection timeout. Please check your network and refresh.</div>
+        <div class="loading-text">Loading Assets<span class="dots"></span></div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
         </div>
+        <div id="error-message" class="error-message" style="display: none;">Connection timeout. Please check your network and refresh.</div>
     </div>
 
     <!-- Main Content -->
@@ -82,56 +99,115 @@
         (function() {
             const loadingScreen = document.getElementById('loading-screen');
             const errorMessage = document.getElementById('error-message');
+            const dotsElement = document.querySelector('.dots');
+            const progressBar = document.getElementById('progress-bar');
             const body = document.body;
             let timeoutId;
+            let dotsInterval;
+            let progressInterval;
+            let progress = 0;
+            let isLoaded = false;
+
+            // Animated dots function (professional: cycles through . .. ... with subtle blink on last two)
+            function animateDots() {
+                let dots = '';
+                dotsInterval = setInterval(() => {
+                    if (dots === '...') {
+                        dots = '';
+                    } else {
+                        dots += '.';
+                    }
+                    dotsElement.textContent = dots;
+                    // Subtle blink on last two dots
+                    if (dots.length >= 2) {
+                        dotsElement.style.animation = 'blink 0.5s ease-in-out';
+                    } else {
+                        dotsElement.style.animation = 'none';
+                    }
+                }, 500);
+            }
+
+            // Simulate progress bar (as if processing lots of code/assets)
+            function simulateProgress() {
+                progressInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += 2; // Increment slowly for professional feel
+                        progressBar.style.width = progress + '%';
+                    } else {
+                        clearInterval(progressInterval);
+                    }
+                }, 50); // Adjust speed: slower for more "processing" feel
+            }
+
+            // Add blink animation keyframes
+            const styleSheet = document.styleSheets[0];
+            styleSheet.insertRule(`
+                @keyframes blink {
+                    0% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                    100% { opacity: 1; }
+                }
+            `, styleSheet.cssRules.length);
 
             // Function to hide loading and show main content
             function completeLoading() {
                 clearTimeout(timeoutId);
-                loadingScreen.classList.add('hidden');
+                clearInterval(dotsInterval);
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%'; // Ensure 100%
                 setTimeout(() => {
-                    loadingScreen.style.display = 'none'; // Fully remove after fade
-                }, 500);
-                body.classList.add('loaded');
+                    loadingScreen.classList.add('hidden');
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                    body.classList.add('loaded');
+                }, 500); // Short delay for smooth finish
             }
 
             // Function to show error
             function showError() {
+                clearInterval(dotsInterval);
+                clearInterval(progressInterval);
                 errorMessage.style.display = 'block';
                 const loadingText = document.querySelector('.loading-text');
                 loadingText.textContent = 'Loading Failed';
+                progressBar.style.backgroundColor = 'red'; // Visual error cue
+                // Still complete loading after showing error to access site
+                setTimeout(completeLoading, 2000);
             }
 
-            // Set timeout for 5 seconds
-            timeoutId = setTimeout(() => {
-                showError();
-            }, 5000);
+            // Start animations
+            animateDots();
+            simulateProgress();
 
-            // Check if main content is ready (DOM loaded)
+            // Set timeout for 5 seconds
+            timeoutId = setTimeout(showError, 5000);
+
+            // Check if main content and script are ready
             if (document.readyState === 'complete') {
-                // If external scripts like Chatway are slow, wait a bit more or check onload
                 const script = document.getElementById('chatway');
                 if (script.complete || script.readyState === 'complete') {
+                    isLoaded = true;
                     completeLoading();
                 } else {
-                    script.onload = completeLoading;
-                    script.onerror = () => {
-                        showError();
-                        setTimeout(completeLoading, 1000); // Still show site after error
+                    script.onload = () => {
+                        isLoaded = true;
+                        completeLoading();
                     };
+                    script.onerror = showError;
                 }
             } else {
-                // Wait for DOM to load
                 window.addEventListener('load', () => {
                     const script = document.getElementById('chatway');
                     if (script.complete || script.readyState === 'complete') {
+                        isLoaded = true;
                         completeLoading();
                     } else {
-                        script.onload = completeLoading;
-                        script.onerror = () => {
-                            showError();
-                            setTimeout(completeLoading, 1000);
+                        script.onload = () => {
+                            isLoaded = true;
+                            completeLoading();
                         };
+                        script.onerror = showError;
                     }
                 });
             }
