@@ -4,214 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Under Work</title>
-    <style>
-        /* Loading screen styles */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-        }
-        #loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .loading-text {
-            color: white;
-            font-family: Arial, sans-serif;
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .dots {
-            display: inline-block;
-            width: 30px; /* Space for dots */
-            text-align: left;
-        }
-        .progress-container {
-            width: 300px;
-            height: 10px;
-            background-color: #333;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background-color: white;
-            transition: width 0.2s ease-in-out;
-        }
-        .error-message {
-            color: red;
-            font-size: 1.2em;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        /* Main site styles (hidden initially) */
-        body {
-            display: none; /* Hidden until loading completes */
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        body.loaded {
-            display: flex; /* Show when loaded */
-        }
-        h1 {
-            font-weight: 900; /* Makes the text thick/bold */
-            font-size: 2.5em;
-            text-align: center;
-            color: #333;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Loading Screen -->
     <div id="loading-screen">
-        <div class="loading-text">Loading Assets<span class="dots"></span></div>
-        <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
+        <div class="loading-content">
+            <div class="loading-text">Loading Assets<span class="dots"></span></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="status-message">System Ready</div>
         </div>
-        <div id="error-message" class="error-message" style="display: none;">Connection timeout. Please check your network and refresh.</div>
+        <div class="local-storage-message">Optimizing local storage for a seamless experience. Thank you for your patience.</div>
     </div>
 
     <!-- Main Content -->
-    <h1>Under Work</h1>
+    <main id="main-content">
+        <h1>Under Work</h1>
+    </main>
 
-    <!-- Chatway Script (loaded after main content is ready) -->
+    <!-- Navigation Bar (Bottom Fixed) -->
+    <nav id="navbar">
+        <ul>
+            <!-- Left blanks for symmetry (placeholders) -->
+            <li class="blank"><a href="#">&nbsp;</a></li>
+            <li class="blank"><a href="#">&nbsp;</a></li>
+            <li class="blank"><a href="#">&nbsp;</a></li>
+            <!-- Center: Home -->
+            <li><a href="#"><img src="home-icon.png" alt="Home" class="nav-icon">Home</a></li>
+            <!-- Right: Forum List, Upload, Profile -->
+            <li><a href="#"><img src="forum-icon.png" alt="Forum List" class="nav-icon">Forum List</a></li>
+            <li><a href="#"><img src="upload-icon.png" alt="Upload" class="nav-icon">Upload</a></li>
+            <li><a href="#"><img src="profile-icon.png" alt="Profile" class="nav-icon">Profile</a></li>
+        </ul>
+    </nav>
+
+    <!-- Chatway Script -->
     <script id="chatway" async="true" src="https://cdn.chatway.app/widget.js?id=bhwGBABQCnDe"></script>
 
-    <!-- Loading Logic Script -->
-    <script>
-        (function() {
-            const loadingScreen = document.getElementById('loading-screen');
-            const errorMessage = document.getElementById('error-message');
-            const dotsElement = document.querySelector('.dots');
-            const progressBar = document.getElementById('progress-bar');
-            const body = document.body;
-            let timeoutId;
-            let dotsInterval;
-            let progressInterval;
-            let progress = 0;
-            let isLoaded = false;
-
-            // Animated dots function (professional: cycles through . .. ... with subtle blink on last two)
-            function animateDots() {
-                let dots = '';
-                dotsInterval = setInterval(() => {
-                    if (dots === '...') {
-                        dots = '';
-                    } else {
-                        dots += '.';
-                    }
-                    dotsElement.textContent = dots;
-                    // Subtle blink on last two dots
-                    if (dots.length >= 2) {
-                        dotsElement.style.animation = 'blink 0.5s ease-in-out';
-                    } else {
-                        dotsElement.style.animation = 'none';
-                    }
-                }, 500);
-            }
-
-            // Simulate progress bar (as if processing lots of code/assets)
-            function simulateProgress() {
-                progressInterval = setInterval(() => {
-                    if (progress < 100) {
-                        progress += 2; // Increment slowly for professional feel
-                        progressBar.style.width = progress + '%';
-                    } else {
-                        clearInterval(progressInterval);
-                    }
-                }, 50); // Adjust speed: slower for more "processing" feel
-            }
-
-            // Add blink animation keyframes
-            const styleSheet = document.styleSheets[0];
-            styleSheet.insertRule(`
-                @keyframes blink {
-                    0% { opacity: 1; }
-                    50% { opacity: 0.5; }
-                    100% { opacity: 1; }
-                }
-            `, styleSheet.cssRules.length);
-
-            // Function to hide loading and show main content
-            function completeLoading() {
-                clearTimeout(timeoutId);
-                clearInterval(dotsInterval);
-                clearInterval(progressInterval);
-                progressBar.style.width = '100%'; // Ensure 100%
-                setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                    }, 500);
-                    body.classList.add('loaded');
-                }, 500); // Short delay for smooth finish
-            }
-
-            // Function to show error
-            function showError() {
-                clearInterval(dotsInterval);
-                clearInterval(progressInterval);
-                errorMessage.style.display = 'block';
-                const loadingText = document.querySelector('.loading-text');
-                loadingText.textContent = 'Loading Failed';
-                progressBar.style.backgroundColor = 'red'; // Visual error cue
-                // Still complete loading after showing error to access site
-                setTimeout(completeLoading, 2000);
-            }
-
-            // Start animations
-            animateDots();
-            simulateProgress();
-
-            // Set timeout for 5 seconds
-            timeoutId = setTimeout(showError, 5000);
-
-            // Check if main content and script are ready
-            if (document.readyState === 'complete') {
-                const script = document.getElementById('chatway');
-                if (script.complete || script.readyState === 'complete') {
-                    isLoaded = true;
-                    completeLoading();
-                } else {
-                    script.onload = () => {
-                        isLoaded = true;
-                        completeLoading();
-                    };
-                    script.onerror = showError;
-                }
-            } else {
-                window.addEventListener('load', () => {
-                    const script = document.getElementById('chatway');
-                    if (script.complete || script.readyState === 'complete') {
-                        isLoaded = true;
-                        completeLoading();
-                    } else {
-                        script.onload = () => {
-                            isLoaded = true;
-                            completeLoading();
-                        };
-                        script.onerror = showError;
-                    }
-                });
-            }
-        })();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
