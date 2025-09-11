@@ -1,1 +1,162 @@
+/* style.css */
 
+/* Global Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: white; /* Original background shown after loading */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; /* Prevent scroll during loading */
+}
+
+#main-content {
+    display: none; /* Hidden until loaded */
+    text-align: center;
+}
+
+#main-content.loaded {
+    display: block;
+}
+
+h1 {
+    font-weight: 900; /* Thick/bold */
+    font-size: 2.5em;
+    color: #333;
+}
+
+/* Loading Screen Styles */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 1s ease-out; /* Smooth fade out */
+}
+
+#loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-text {
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.dots {
+    display: inline-block;
+    width: 30px;
+    text-align: left;
+}
+
+.progress-container {
+    width: 300px;
+    height: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: white;
+    transition: width 0.2s ease-in-out;
+}
+
+.status-message {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    display: none; /* Shown when ready */
+    margin-top: 10px;
+}
+
+.local-storage-message {
+    position: absolute;
+    bottom: 100px; /* Positioned at bottom center */
+    color: white;
+    font-size: 1em;
+    text-align: center;
+    max-width: 80%;
+    opacity: 0.8;
+}
+
+/* Navigation Bar Styles */
+#navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ccc;
+    display: none; /* Hidden until loaded */
+    z-index: 1000;
+}
+
+#navbar.loaded {
+    display: block;
+}
+
+#navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around; /* Even spacing for symmetry */
+    align-items: center;
+}
+
+#navbar li {
+    flex: 1;
+    text-align: center;
+}
+
+#navbar li.blank {
+    visibility: hidden; /* Blanks are invisible but take space for symmetry */
+}
+
+#navbar a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+}
+
+/* Responsive Design: Fit to any device, mobile-first */
+@media (min-width: 768px) {
+    #navbar ul {
+        max-width: 768px; /* Limit width on desktop for mobile-like feel */
+        margin: 0 auto;
+    }
+
+    .progress-container {
+        width: 400px; /* Slightly larger on bigger screens */
+    }
+}
