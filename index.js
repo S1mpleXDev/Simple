@@ -1,4 +1,4 @@
-// script.js
+// index.js
 
 (function() {
     const loadingScreen = document.getElementById('loading-screen');
@@ -6,12 +6,31 @@
     const dotsElement = document.querySelector('.dots');
     const progressBar = document.getElementById('progress-bar');
     const statusMessage = document.querySelector('.status-message');
+    const slowMessage = document.getElementById('slow-message');
     const mainContent = document.getElementById('main-content');
     const navbar = document.getElementById('navbar');
     let dotsInterval;
     let progressInterval;
     let progress = 0;
     let timeoutId;
+    let lastProgress = 0;
+    let slowCheckInterval;
+    let isSlowDetected = false;
+
+    // Function to check connection (simulate server check)
+    async function checkConnection() {
+        try {
+            const startTime = Date.now();
+            await fetch('https://www.w3.org/TR/SVG/', { method: 'HEAD', mode: 'no-cors' }); // Use a reliable URL for connection test
+            const endTime = Date.now();
+            if (endTime - startTime > 2000) { // If response >2s, consider slow
+                return { isSlow: true, latency: endTime - startTime };
+            }
+            return { isSlow: false };
+        } catch (error) {
+            return { isSlow: true };
+        }
+    }
 
     // Animated dots: Cycle through . .. ... with blink on last two
     function animateDots() {
@@ -31,32 +50,65 @@
         }, 500);
     }
 
-    // Simulate progress bar
-    function simulateProgress() {
-        progressInterval = setInterval(() => {
-            if (progress < 100) {
-                progress += 2;
+    // Simulate progress bar, but make it accurate based on connection
+    async function simulateProgress() {
+        // Initial quick progress for local assets
+        let localProgress = 0;
+        const localInterval = setInterval(() => {
+            if (localProgress < 30) { // 30% for local
+                localProgress += 3;
+                progress = localProgress;
                 progressBar.style.width = progress + '%';
+                lastProgress = progress;
             } else {
-                clearInterval(progressInterval);
-                // Show "System Ready" and fade out
-                loadingText.style.display = 'none';
-                statusMessage.style.display = 'block';
-                setTimeout(completeLoading, 1000); // Delay for "System Ready" visibility
+                clearInterval(localInterval);
+                // Check connection and adjust
+                checkConnection().then(({ isSlow }) => {
+                    if (isSlow) {
+                        isSlowDetected = true;
+                        slowMessage.style.display = 'block';
+                        // Slower increment for slow connection
+                        progressInterval = setInterval(() => {
+                            if (progress < 100) {
+                                progress += 0.5; // Very slow
+                                progressBar.style.width = progress + '%';
+                                lastProgress = progress;
+                            } else {
+                                finishProgress();
+                            }
+                        }, 200);
+                        // Additional 5s check if no progress
+                        slowCheckInterval = setInterval(() => {
+                            if (progress === lastProgress && !isSlowDetected) {
+                                slowMessage.style.display = 'block';
+                                isSlowDetected = true;
+                            }
+                        }, 5000);
+                    } else {
+                        // Normal progress
+                        progressInterval = setInterval(() => {
+                            if (progress < 100) {
+                                progress += 2;
+                                progressBar.style.width = progress + '%';
+                                lastProgress = progress;
+                            } else {
+                                finishProgress();
+                            }
+                        }, 50);
+                    }
+                });
             }
-        }, 50);
+        }, 100);
     }
 
-    // Define blink animation
-    const style = document.createElement('style');
-    style.innerHTML = `
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
+    function finishProgress() {
+        clearInterval(progressInterval);
+        clearInterval(slowCheckInterval);
+        // Show "System Ready" and fade out
+        loadingText.style.display = 'none';
+        statusMessage.style.display = 'block';
+        setTimeout(completeLoading, 1000); // Delay for "System Ready" visibility
+    }
 
     // Hide loading screen and show main content/navbar
     function completeLoading() {
@@ -84,7 +136,7 @@
     animateDots();
     simulateProgress();
 
-    // 5-second timeout
+    // 5-second overall timeout
     timeoutId = setTimeout(showError, 5000);
 
     // Wait for DOM and Chatway script
