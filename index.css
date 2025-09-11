@@ -1,4 +1,4 @@
-/* style.css */
+/* index.css */
 
 /* Global Styles */
 body {
@@ -90,6 +90,13 @@ h1 {
     margin-top: 10px;
 }
 
+.slow-message {
+    color: yellow;
+    font-size: 1.2em;
+    text-align: center;
+    margin-top: 10px;
+}
+
 .local-storage-message {
     position: absolute;
     bottom: 100px; /* Positioned at bottom center */
@@ -106,8 +113,8 @@ h1 {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #f0f0f0;
-    border-top: 1px solid #ccc;
+    background-color: #333; /* Dark grey background */
+    border-top: 1px solid #555;
     display: none; /* Hidden until loaded */
     z-index: 1000;
 }
@@ -121,7 +128,7 @@ h1 {
     margin: 0;
     padding: 10px 0;
     display: flex;
-    justify-content: space-around; /* Even spacing for symmetry */
+    justify-content: space-around; /* Even spacing for symmetry, same level */
     align-items: center;
 }
 
@@ -131,16 +138,17 @@ h1 {
 }
 
 #navbar li.blank {
-    visibility: hidden; /* Blanks are invisible but take space for symmetry */
+    /* Blanks are visible with "blank" text */
 }
 
 #navbar a {
     text-decoration: none;
-    color: #333;
+    color: white; /* White text for visibility on dark bg */
     font-size: 0.9em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 5px;
 }
 
 .nav-icon {
@@ -159,4 +167,11 @@ h1 {
     .progress-container {
         width: 400px; /* Slightly larger on bigger screens */
     }
+}
+
+/* Blink animation */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
