@@ -15,6 +15,7 @@
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
             <div class="status-message">System Ready</div>
+            <div id="slow-message" class="slow-message" style="display: none;">Slow internet detected. Checking connection... (takes up to 5 seconds)</div>
         </div>
         <div class="local-storage-message">Optimizing local storage for a seamless experience. Thank you for your patience.</div>
     </div>
@@ -27,16 +28,16 @@
     <!-- Navigation Bar (Bottom Fixed) -->
     <nav id="navbar">
         <ul>
-            <!-- Left blanks for symmetry (placeholders) -->
-            <li class="blank"><a href="#">&nbsp;</a></li>
-            <li class="blank"><a href="#">&nbsp;</a></li>
-            <li class="blank"><a href="#">&nbsp;</a></li>
+            <!-- Left blanks for symmetry (now visible with text "blank") -->
+            <li class="blank"><a href="#">blank</a></li>
+            <li class="blank"><a href="#">blank</a></li>
+            <li class="blank"><a href="#">blank</a></li>
             <!-- Center: Home -->
-            <li><a href="#"><img src="home-icon.png" alt="Home" class="nav-icon">Home</a></li>
-            <!-- Right: Forum List, Upload, Profile -->
-            <li><a href="#"><img src="forum-icon.png" alt="Forum List" class="nav-icon">Forum List</a></li>
-            <li><a href="#"><img src="upload-icon.png" alt="Upload" class="nav-icon">Upload</a></li>
-            <li><a href="#"><img src="profile-icon.png" alt="Profile" class="nav-icon">Profile</a></li>
+            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a></li>
+            <!-- Right: Forum, Upload, Profile -->
+            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-type-icon lucide-file-type"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9 13v-1h6v1"/><path d="M12 12v6"/><path d="M11 18h2"/></svg>Forum</a></li>
+            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload-icon lucide-upload"><path d="M12 3v12"/><path d="m17 8-5-5-5 5"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>Upload</a></li>
+            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a></li>
         </ul>
     </nav>
 
