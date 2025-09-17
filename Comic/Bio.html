@@ -31,7 +31,7 @@
         }
         .social-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
             max-width: 600px;
             margin: 40px auto;
@@ -42,10 +42,10 @@
             border-radius: 50%;
         }
         .copy-section {
-            margin: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin: 20px 0;
         }
         .download-button, .copy-button {
             background-color: black;
@@ -65,10 +65,11 @@
             color: #666;
             margin-top: 5px;
         }
-        .discord-text {
-            font-size: 10px;
+        .warning-text {
+            font-size: 14px;
             color: #666;
-            max-width: 150px;
+            max-width: 600px;
+            margin: 20px auto;
             text-align: center;
         }
         .tutorial {
@@ -102,15 +103,12 @@
     </a>
     
     <div class="social-row">
-        <div>
-            <a href="https://discord.gg/Kr2pvPfEUR" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord" class="social-icon">
-            </a>
-            <div class="discord-text">The Discord server may often veer off-topic, focusing on content unrelated to its main purpose, including the use of slurs that could offend sensitive users. The community primarily revolves around iPhone hacks, methods, and is more popular for sharing Roblox free exploits and free movies.</div>
-        </div>
+        <a href="https://discord.gg/Kr2pvPfEUR" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord" class="social-icon">
+        </a>
         
         <div class="copy-section">
-            <a href="https://apps.apple.com/us/app/tachimanga/id6447486175">
+            <a href="https://apps.apple.com/us/app/tachimanga/id6447486175" class="download-link">
                 <button class="download-button">Download TachiManga</button>
             </a>
             <button class="copy-button" onclick="copyRepoUrl()">Copy Comic Sites Repo</button>
@@ -121,6 +119,8 @@
             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="social-icon">
         </a>
     </div>
+    
+    <div class="warning-text">Unfortunately, the Discord server may often veer off-topic, focusing on content unrelated to its main purpose, including the use of slurs that could offend sensitive users. The community primarily revolves around iPhone hacks, methods, and is more popular for sharing Roblox free exploits and free movies.</div>
     
     <div class="tutorial">
         <h2>Tutorial on How to Set Extension Repo Up</h2>
